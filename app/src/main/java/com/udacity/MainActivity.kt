@@ -1,5 +1,6 @@
 package com.udacity
 
+import com.udacity.R
 import android.app.DownloadManager
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,11 +10,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.udacity.databinding.ActivityMainBinding
 
 
@@ -35,8 +37,18 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
+        val glideBtn = findViewById<View>(R.id.glide_btn) as RadioButton
+        val loadAppBtn = findViewById<View>(R.id.load_app_btn) as RadioButton
+        val retrofitBtn = findViewById<View>(R.id.retrofit_btn) as RadioButton
+
         binding.contentMain.customButton.setOnClickListener {
-            download()
+            if(!glideBtn.isChecked && !loadAppBtn.isChecked && !retrofitBtn.isChecked)
+            {
+                //toast
+            }
+            else{
+                download()
+            }
         }
     }
 
@@ -64,6 +76,29 @@ class MainActivity : AppCompatActivity() {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
+    }
+
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            // Is the button now checked?
+            val checked = view.isChecked
+
+            // Check which radio button was clicked
+            when (view.getId()) {
+                R.id.glide_btn ->
+                    if (checked) {
+                        Log.i("MainActivity", "glide button checked")
+                    }
+                R.id.load_app_btn ->
+                    if (checked) {
+                        Log.i("MainActivity", "load button checked")
+                    }
+                R.id.retrofit_btn ->
+                    if (checked){
+                        Log.i("MainActivity", "retrofit button checked")
+                    }
+            }
+        }
     }
 
 }
