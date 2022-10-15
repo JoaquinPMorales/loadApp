@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 //send notification
                 Log.i("MainActivity", "Download complete")
                 if (context != null) {
-                    notificationManager.sendNotification(R.string.notification_description.toString(), context)
+                    notificationManager.sendNotification(getText(R.string.notification_description).toString(), context)
                 }
             }
         }
@@ -153,16 +153,16 @@ class MainActivity : AppCompatActivity() {
 
     fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context){
 
-//    val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+    val contentIntent = Intent(applicationContext, DetailActivity::class.java)
 //    contentIntent.putExtra(FILENAME, filename)
 //    contentIntent.putExtra(STATUS, status)
-//
-//    val contentPendingIntent = PendingIntent.getActivity(
-//        applicationContext,
-//        NOTIFICATION_ID,
-//        contentIntent,
-//        PendingIntent.FLAG_UPDATE_CURRENT
-//    )
+
+    val contentPendingIntent = PendingIntent.getActivity(
+        applicationContext,
+        NOTIFICATION_ID,
+        contentIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
         val builder = NotificationCompat.Builder(
             applicationContext,
@@ -172,11 +172,10 @@ class MainActivity : AppCompatActivity() {
             .getString(R.string.notification_title))
             .setContentText(messageBody)
             .setAutoCancel(true)
-//        .addAction(R.drawable.ic_launcher_foreground,
-//            applicationContext.getString(R.string.notification_button),
-//            contentIntent
-//        )
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .addAction(R.drawable.ic_launcher_foreground,
+            applicationContext.getString(R.string.notification_button),
+            contentPendingIntent
+            ).setPriority(NotificationCompat.PRIORITY_HIGH)
         notify(NOTIFICATION_ID, builder.build())
     }
 }
