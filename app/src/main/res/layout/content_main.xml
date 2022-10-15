@@ -17,7 +17,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:buttonColor="@color/colorPrimary"
+            app:circleColor="@color/colorAccent"
+            app:circleRadius="@dimen/circleRadius"
+            app:progressColor="@color/colorPrimaryDark"
+            app:textColor="@color/white"/>
 
         <RadioGroup
             android:id="@+id/radioGroup"
