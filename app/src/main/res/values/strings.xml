@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">LoadApp</string>
     <string name="app_description">Download files from Internet</string>
     <string name="action_settings">Settings</string>
@@ -15,8 +15,7 @@
     <string name="glideButton">Glide - Image Loading Library by BumpTech</string>
     <string name="LoadAppButton">LoadApp - Current repository by Udacity</string>
     <string name="retrofitButton">Retrofit Type-safe client for Android and Java by Square, Inc</string>
-
-    <string name="glide_url">https://github.com/bumptech/glide</string>
-    <string name="loadApp_url">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter</string>
-    <string name="retrofit_url">https://github.com/square/retrofit</string>
+    <string name="download_channel_id" translatable="false">Download_channel</string>
+    <string name="download_channel_name" translatable="true">download</string>
+    <string name="no_radio_button_selected" tools:ignore="ExtraTranslation">"You have to select one option"</string>
 </resources>
