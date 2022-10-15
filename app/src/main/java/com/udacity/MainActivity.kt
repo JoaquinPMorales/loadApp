@@ -15,15 +15,13 @@ import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
-import androidx.databinding.DataBindingUtil
-import com.udacity.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private var downloadID: Long = 0
-
-    private lateinit var binding: ActivityMainBinding
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
@@ -32,8 +30,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        setSupportActionBar(binding.toolbar)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
@@ -41,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         val loadAppBtn = findViewById<View>(R.id.load_app_btn) as RadioButton
         val retrofitBtn = findViewById<View>(R.id.retrofit_btn) as RadioButton
 
-        binding.contentMain.customButton.setOnClickListener {
+        custom_button.setOnClickListener {
             if(!glideBtn.isChecked && !loadAppBtn.isChecked && !retrofitBtn.isChecked)
             {
                 //toast
