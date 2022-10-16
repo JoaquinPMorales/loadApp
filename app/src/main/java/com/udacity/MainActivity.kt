@@ -8,8 +8,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.database.Cursor
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -34,9 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
     private lateinit var notificationChannel : NotificationChannel
-//    private lateinit var downloadManager : DownloadManager
+    private lateinit var downloadManager : DownloadManager
 
     private var selectedUrl = ""
+    private var radioButtonSelected = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
         val glideBtn = findViewById<View>(R.id.glide_btn) as RadioButton
         val loadAppBtn = findViewById<View>(R.id.load_app_btn) as RadioButton
@@ -64,42 +68,57 @@ class MainActivity : AppCompatActivity() {
 
         //init notificationManager and create channel
         initNotificationManagerAndCreateChannel(this)
-        //downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
     }
 
     private fun initNotificationManagerAndCreateChannel(context: Context)
     {
-        notificationManager = ContextCompat.getSystemService(
-            context,
-            NotificationManager::class.java
-        ) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager = ContextCompat.getSystemService(
+                context,
+                NotificationManager::class.java
+            ) as NotificationManager
 
-        notificationChannel = NotificationChannel(
-            getString(R.string.download_channel_id),
-            getString(R.string.download_channel_name),
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        .apply {
-                setShowBadge(false)
+            notificationChannel = NotificationChannel(
+                getString(R.string.download_channel_id),
+                getString(R.string.download_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+                .apply {
+                    setShowBadge(false)
+                }
+
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Download complete"
+            notificationManager.createNotificationChannel(notificationChannel)
         }
-
-        notificationChannel.enableLights(true)
-        notificationChannel.lightColor = Color.RED
-        notificationChannel.enableVibration(true)
-        notificationChannel.description = "Download complete"
-        notificationManager.createNotificationChannel(notificationChannel)
     }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             val action = intent!!.action
-            if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-            {
-                //send notification
-                Log.i("MainActivity", "Download complete")
-                if (context != null) {
-                    notificationManager.sendNotification(getText(R.string.notification_description).toString(), context)
+            if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                id?.let{
+                    val cursor: Cursor? =
+                        downloadManager?.query(DownloadManager.Query().setFilterById(downloadID))
+                    if (cursor != null){
+                        if (cursor.moveToFirst()) {
+                            val status =
+                                cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+
+                            notificationManager.sendNotification(
+                                applicationContext.getString(R.string.notification_description),
+                                applicationContext,
+                                radioButtonSelected,
+                                when(cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+                                    DownloadManager.STATUS_SUCCESSFUL -> true
+                                    DownloadManager.STATUS_FAILED -> false
+                                    else -> false
+                                })
+                        }
+                    }
                 }
             }
         }
@@ -136,26 +155,30 @@ class MainActivity : AppCompatActivity() {
                     if (checked) {
                         Log.i("MainActivity", "glide button checked")
                         selectedUrl = GLIDE_URL
+                        radioButtonSelected = "GLIDE"
                     }
                 R.id.load_app_btn ->
                     if (checked) {
                         Log.i("MainActivity", "load button checked")
                         selectedUrl = LOAD_APP_URL
+                        radioButtonSelected = "LOAD APP"
                     }
                 R.id.retrofit_btn ->
                     if (checked){
                         selectedUrl = RETROFIT_URL
                         Log.i("MainActivity", "retrofit button checked")
+                        radioButtonSelected = "RETROFIT"
                     }
             }
         }
     }
 
-    fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context){
+    fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context, filename : String, status : Boolean) {
 
+    Log.i("MainActivity", "status received: $status")
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
-//    contentIntent.putExtra(FILENAME, filename)
-//    contentIntent.putExtra(STATUS, status)
+    contentIntent.putExtra(FILENAME, filename)
+    contentIntent.putExtra(STATUS, status)
 
     val contentPendingIntent = PendingIntent.getActivity(
         applicationContext,
