@@ -18,4 +18,7 @@
     <string name="download_channel_id" translatable="false">Download_channel</string>
     <string name="download_channel_name" translatable="true">download</string>
     <string name="no_radio_button_selected" tools:ignore="ExtraTranslation">"You have to select one option"</string>
+    <string name="filenameTitle">File name:</string>
+    <string name="statusTitle">Status:</string>
+    <string name="back_button_string">GO BACK</string>
 </resources>

@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         applicationContext,
         NOTIFICATION_ID,
         contentIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent.FLAG_CANCEL_CURRENT
     )
 
         val builder = NotificationCompat.Builder(
@@ -195,10 +195,11 @@ class MainActivity : AppCompatActivity() {
             .getString(R.string.notification_title))
             .setContentText(messageBody)
             .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .addAction(R.drawable.ic_launcher_foreground,
             applicationContext.getString(R.string.notification_button),
             contentPendingIntent
-            ).setPriority(NotificationCompat.PRIORITY_HIGH)
+            )
         notify(NOTIFICATION_ID, builder.build())
     }
 }
