@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/fileNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/status_title"
+            app:layout_constraintVertical_bias="1.0"
+            android:layout_marginStart="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
+        <Constraint
+            android:id="@+id/status_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/fileNameTitle"
+            android:layout_marginTop="32dp" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint android:id="@id/fileNameTitle" />
+        <Constraint
+            android:id="@+id/filename_value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fileNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/fileNameTitle"
+            app:layout_constraintHorizontal_bias="0.22" />
+        <Constraint
+            android:id="@+id/status_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintVertical_bias="0.100000024"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/fileNameTitle"
+            android:layout_marginTop="32dp" />
+        <Constraint
+            android:id="@+id/status_value"
+            app:layout_constraintStart_toEndOf="@+id/status_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/status_title"
+            app:layout_constraintStart_toStartOf="@+id/filename_value" />
+        <Constraint
+            android:id="@+id/back_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintVertical_bias="0.98"
+            app:layout_constraintTop_toBottomOf="@+id/status_value"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+    <Transition
+        app:autoTransition="animateToEnd"
+        app:constraintSetStart="@+id/start"
+        app:constraintSetEnd="@+id/end"
+        app:duration="2000">
+    </Transition>
+</MotionScene>
