@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.content_main.*
 private val NOTIFICATION_ID = 0
 const val FILENAME = "FILENAME"
 const val STATUS = "STATUS"
+const val NOTIFICATION_KEY = "NOTIFICATION"
 
 class MainActivity : AppCompatActivity() {
 
@@ -179,6 +180,7 @@ class MainActivity : AppCompatActivity() {
     val contentIntent = Intent(applicationContext, DetailActivity::class.java)
     contentIntent.putExtra(FILENAME, filename)
     contentIntent.putExtra(STATUS, status)
+    contentIntent.putExtra(NOTIFICATION_KEY, NOTIFICATION_ID)
 
     val contentPendingIntent = PendingIntent.getActivity(
         applicationContext,
