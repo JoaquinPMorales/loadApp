@@ -15,14 +15,14 @@
         android:layout_height="60dp"
         android:layout_margin="20dp"
         android:layout_marginBottom="16dp"
-        app:buttonColor="@color/colorPrimary"
-        app:circleColor="@color/colorAccent"
         app:circleRadius="@dimen/circleRadius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:progressColor="@color/colorPrimaryDark"
-        app:textColor="@color/white" />
+        app:background="@color/colorPrimaryDark"
+        app:textColor="@color/white"
+        app:buttonColor="@color/colorPrimary"
+        app:circleColor="@color/colorAccent"/>
 
     <RadioGroup
         android:id="@+id/radioGroup"

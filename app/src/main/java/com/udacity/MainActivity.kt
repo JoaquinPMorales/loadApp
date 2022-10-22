@@ -1,5 +1,6 @@
 package com.udacity
 
+import android.animation.ObjectAnimator
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,6 +11,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.Cursor
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var action: NotificationCompat.Action
     private lateinit var notificationChannel : NotificationChannel
     private lateinit var downloadManager : DownloadManager
+    private var animator: ObjectAnimator? = null
 
     private var selectedUrl = ""
     private var radioButtonSelected = ""
@@ -51,18 +55,16 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
-        val glideBtn = findViewById<View>(R.id.glide_btn) as RadioButton
-        val loadAppBtn = findViewById<View>(R.id.load_app_btn) as RadioButton
-        val retrofitBtn = findViewById<View>(R.id.retrofit_btn) as RadioButton
-
         custom_button.setOnClickListener {
             if(selectedUrl.isEmpty())
             {
+                custom_button.buttonState = ButtonState.Completed
                 //toast
                 val toast = Toast.makeText(applicationContext, R.string.no_radio_button_selected, Toast.LENGTH_SHORT)
                 toast.show()
             }
             else{
+                custom_button.buttonState = ButtonState.Loading
                 download()
             }
         }
@@ -106,9 +108,7 @@ class MainActivity : AppCompatActivity() {
                         downloadManager?.query(DownloadManager.Query().setFilterById(downloadID))
                     if (cursor != null){
                         if (cursor.moveToFirst()) {
-                            val status =
-                                cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-
+                            custom_button.buttonState = ButtonState.Completed
                             notificationManager.sendNotification(
                                 applicationContext.getString(R.string.notification_description),
                                 applicationContext,
@@ -134,15 +134,27 @@ class MainActivity : AppCompatActivity() {
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
 
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        downloadID = downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        // Check connectivity
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        if (networkInfo != null && networkInfo.isAvailable == true) {
+
+            val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            downloadID = downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+
+        } else {
+
+            Toast.makeText(this@MainActivity, "Connection is not available", Toast.LENGTH_LONG).show()
+            custom_button.buttonState = ButtonState.Completed
+        }
     }
 
     companion object {
         private const val GLIDE_URL = "https://github.com/bumptech/glide/archive/refs/heads/master.zip"
         private const val LOAD_APP_URL = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/refs/heads/master.zip"
         private const val RETROFIT_URL = "https://github.com/square/retrofit/archive/refs/heads/master.zip"
-        private const val CHANNEL_ID = "downloadChannel"
     }
 
     fun onRadioButtonClicked(view: View) {
