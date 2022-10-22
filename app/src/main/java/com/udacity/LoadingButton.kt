@@ -143,9 +143,9 @@ class LoadingButton @JvmOverloads constructor(
 
             // Draws animated circle filled during download process
             canvas?.drawArc(
-                widthSize - 145f, heightSize / 2 - 35f,
-                widthSize - 75f, heightSize / 2 + 35f,
-                0f, circleAngleProgress, true, paintForCircle)
+                widthSize - 175f, heightSize / 2 - 35f,
+                widthSize - 105f, heightSize / 2 + 35f,
+                0f, circleAngleProgress / .5f, true, paintForCircle)
         }
 
         // Centres text button
